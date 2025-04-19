@@ -20,17 +20,22 @@ extern "C" {
 HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
 	return low <= value && value <= high;
 }
-HFN bool shemi_block_hebrew(char32_t c) { return _shemi_char_in_range(0x0590, 0x05FF, c); }
-HFN bool shemi_block_hebrew_alphabet(char32_t c) { return _shemi_char_in_range(0x05D0, 0x05EA, c); }
-HFN bool shemi_block_hebrew_cantillation(char32_t c) { return _shemi_char_in_range(0x0591, 0x05AF, c); }
-HFN bool shemi_block_phoenician(char32_t c) { return _shemi_char_in_range(0x10900, 0x1091F, c); }
-HFN bool shemi_block_phoenician_alphabet(char32_t c) { return _shemi_char_in_range(0x10900, 0x10915, c); }
-HFN bool shemi_block_phoenician_number(char32_t c) { return _shemi_char_in_range(0x10916, 0x1091B, c); }
-HFN bool shemi_block_aramaic(char32_t c) { return _shemi_char_in_range(0x10840, 0x1085F, c); }
-HFN bool shemi_block_aramaic_alphabet(char32_t c) { return _shemi_char_in_range(0x10840, 0x10855, c); }
-HFN bool shemi_block_aramaic_number(char32_t c) { return _shemi_char_in_range(0x10858, 0x1085F, c); }
-HFN bool shemi_block_samaritan(char32_t c) { return _shemi_char_in_range(0x0800, 0x083F, c); }
-HFN bool shemi_block_samaritan_alphabet(char32_t c) { return _shemi_char_in_range(0x0800, 0x0815, c); }
+#define BLOCK_FN(NAME, START, END)                  \
+	HFN bool shemi_block_##NAME(char32_t c) {       \
+		return _shemi_char_in_range(START, END, c); \
+	}
+BLOCK_FN(hebrew             , 0x00590, 0x005FF);
+BLOCK_FN(hebrew_alphabet    , 0x005D0, 0x005EA);
+BLOCK_FN(hebrew_cantillation, 0x00591, 0x005AF);
+BLOCK_FN(phoenician         , 0x10900, 0x1091F);
+BLOCK_FN(phoenician_alphabet, 0x10900, 0x10915);
+BLOCK_FN(phoenician_number  , 0x10916, 0x1091B);
+BLOCK_FN(aramaic            , 0x10840, 0x1085F);
+BLOCK_FN(aramaic_alphabet   , 0x10840, 0x10855);
+BLOCK_FN(aramaic_number     , 0x10858, 0x1085F);
+BLOCK_FN(samaritan          , 0x00800, 0x0083F);
+BLOCK_FN(samaritan_alphabet , 0x00800, 0x00815);
+#undef BLOCK_FN
 
 static const char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 10, 11, 12, 12, 13, 13, 14,
