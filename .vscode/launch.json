@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "(ctest) Launch",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"presentation": { "hidden": true },
+			// Resolved by CMake Tools:
+			"program": "${cmake.testProgram}",
+			"args": [ "${cmake.testArgs}"],
+			"cwd": "${workspaceRoot}/build",
+		}
+	]
+}
