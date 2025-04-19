@@ -26,6 +26,30 @@ bool shemi_block_hebrew_cantillation(char32_t c) {
 	return 0x0591 <= c && c <= 0x05AF;
 }
 
+bool shemi_block_phoenician(char32_t c) {
+	return 0x10900 <= c && c <= 0x1091F;
+}
+
+bool shemi_block_phoenician_alphabet(char32_t c) {
+	return 0x10900 <= c && c <= 0x10915;
+}
+
+bool shemi_block_phoenician_number(char32_t c) {
+	return 0x10916 <= c && c <= 0x1091B;
+}
+
+bool shemi_block_aramaic(char32_t c) {
+	return 0x10840 <= c && c <= 0x1085F;
+}
+
+bool shemi_block_aramaic_alphabet(char32_t c) {
+	return 0x10840 <= c && c <= 0x10855;
+}
+
+bool shemi_block_aramaic_number(char32_t c) {
+	return 0x10858 <= c && c <= 0x1085F;
+}
+
 char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c) {
 	return hebrew_to_phoenician_table[c - 0x05DA];
 }
