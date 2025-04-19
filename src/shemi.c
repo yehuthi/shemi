@@ -50,6 +50,14 @@ bool shemi_block_aramaic_number(char32_t c) {
 	return 0x10858 <= c && c <= 0x1085F;
 }
 
+bool shemi_block_samaritan(char32_t c) {
+	return 0x0800 <= c && c <= 0x083F;
+}
+
+bool shemi_block_samaritan_alphabet(char32_t c) {
+	return 0x0800 <= c && c <= 0x0815;
+}
+
 char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c) {
 	return hebrew_to_phoenician_table[c - 0x05DA];
 }

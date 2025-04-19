@@ -14,6 +14,8 @@ bool shemi_block_phoenician_number(char32_t c);
 bool shemi_block_aramaic(char32_t c);
 bool shemi_block_aramaic_alphabet(char32_t c);
 bool shemi_block_aramaic_number(char32_t c);
+bool shemi_block_samaritan(char32_t c);
+bool shemi_block_samaritan_alphabet(char32_t c);
 
 char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c);
 char32_t shemi_hebrew_to_phoenician(char32_t c);
