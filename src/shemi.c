@@ -1,17 +1,9 @@
 #include "shemi.h"
 #include <stdint.h>
 
-static const char32_t HEBREW_TO_PHOENICIAN_TABLE[] = {
-	0x10900, 0x10901, 0x10902, 0x10903, 0x10904,
-	0x10905, 0x10906, 0x10907, 0x10908, 0x10909,
-	0x1090A, 0x1090A, /* kaf */
-	0x1090B,
-	0x1090C, 0x1090C, /* mem */
-	0x1090D, 0x1090D, /* nun */
-	0x1090E, 0x1090F,
-	0x10910, 0x10910, /* pe */
-	0x10911, 0x10911, /* sadi */
-	0x10912, 0x10913, 0x10914, 0x10915
+static const char32_t HEBREW_NORMALIZE_TABLE[] = {
+	0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 10, 11, 12, 12, 13, 13, 14,
+	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
 static bool char_in_range(char32_t low, char32_t high, char32_t value) {
@@ -63,7 +55,7 @@ bool shemi_block_samaritan_alphabet(char32_t c) {
 }
 
 char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c) {
-	return HEBREW_TO_PHOENICIAN_TABLE[c - 0x05DA];
+	return 0x10900 + HEBREW_NORMALIZE_TABLE[c - 0x05DA];
 }
 
 char32_t shemi_hebrew_to_phoenician(char32_t c) {
