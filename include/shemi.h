@@ -17,6 +17,11 @@ extern "C" {
   #define HFN static inline
 #endif
 
+#define SHEMI_PHOENICIAN (0x10900)
+#define SHEMI_HEBREW     (0x005D0)
+#define SHEMI_ARAMAIC    (0x10840)
+#define SHEMI_SAMARITAN  (0x00800)
+
 HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
 	return low <= value && value <= high;
 }
@@ -42,13 +47,13 @@ static const char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
-HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c) {
-	return 0x10900 + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
+HFN char32_t shemi_hebrew_convert_unchecked(char32_t c, char32_t target) {
+	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
-HFN char32_t shemi_hebrew_to_phoenician(char32_t c) {
+HFN char32_t shemi_hebrew_convert(char32_t c, char32_t target) {
 	return shemi_block_hebrew_alphabet(c) ?
-		shemi_hebrew_to_phoenician_unchecked(c) : c;
+		shemi_hebrew_convert_unchecked(c, target) : c;
 }
 
 static const char32_t _SHEMI_HEBREW_SOFIYOT[] = {
