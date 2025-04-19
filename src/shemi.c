@@ -55,7 +55,7 @@ bool shemi_block_samaritan_alphabet(char32_t c) {
 }
 
 char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c) {
-	return 0x10900 + HEBREW_NORMALIZE_TABLE[c - 0x05DA];
+	return 0x10900 + HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
 char32_t shemi_hebrew_to_phoenician(char32_t c) {
