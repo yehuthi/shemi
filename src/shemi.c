@@ -63,12 +63,6 @@ char32_t shemi_hebrew_to_phoenician(char32_t c) {
 		shemi_hebrew_to_phoenician_unchecked(c) : c;
 }
 
-bool shemi_hebrew_sofit(char32_t c) {
-	for (uint8_t i = 0; i < HEBREW_SOFIYOT_COUNT; i++)
-		if (HEBREW_NOT_SOFIYOT[i] == c) return true;
-	return false;
-}
-
 static const char32_t HEBREW_SOFIYOT[] = {
 	0x05DA, 0x05DD, 0x05DF, 0x05E3, 0x05E5
 };
@@ -77,6 +71,12 @@ static const char32_t HEBREW_NOT_SOFIYOT[] = {
 };
 const uint8_t HEBREW_SOFIYOT_COUNT =
 	sizeof(HEBREW_SOFIYOT) / sizeof(HEBREW_SOFIYOT[0]);
+
+bool shemi_hebrew_sofit(char32_t c) {
+	for (uint8_t i = 0; i < HEBREW_SOFIYOT_COUNT; i++)
+		if (HEBREW_NOT_SOFIYOT[i] == c) return true;
+	return false;
+}
 
 char32_t shemi_hebrew_to_sofit(char32_t c) {
 	for (uint8_t i = 0; i < HEBREW_SOFIYOT_COUNT; i++)
