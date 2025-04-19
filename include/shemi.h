@@ -83,6 +83,12 @@ HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	return c;
 }
 
+HFN char32_t shemi_phoenician_convert_unchecked(
+	char32_t c, char32_t from, char32_t to
+) {
+	return c + (to - from);
+}
+
 #ifdef __cplusplus
 }
 #endif
