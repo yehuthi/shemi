@@ -1,0 +1,2 @@
+# shemi
+Semitic languages utilities.
