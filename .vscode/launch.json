@@ -2,6 +2,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "(Windows) Benchmark",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/RelWithDebInfo/shemi_bench.exe",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"console": "externalTerminal"
+		},
+		{
 			"name": "(ctest) Launch",
 			"type": "cppvsdbg",
 			"request": "launch",
