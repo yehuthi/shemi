@@ -67,7 +67,7 @@ TEST(phoenician_convert, phoenicians) {
 			for (size_t i = 0; i < PHNX_LEN; i++) {
 				const char32_t original = PHOENICIANS[s][i];
 				const char32_t expected = PHOENICIANS[d][i];
-				const char32_t actual = shemi_phoenician_convert_unchecked(
+				const char32_t actual = shemi_phoenician_convert(
 					original, PHOENICIANS_TAGS[s], PHOENICIANS_TAGS[d]
 				);
 				if (actual != expected) ADD_FAILURE() << std::hex <<
@@ -79,5 +79,18 @@ TEST(phoenician_convert, phoenicians) {
 					PHOENICIANS_NAMES[d] << " 0x" << expected;
 			}
 		}
+	}
+}
+
+TEST(phoenician_convert, foreign) {
+	for (size_t i = 0; i < FOREIGN_LEN; i++) {
+		const char32_t original = FOREIGN[i];
+		const char32_t expected = original;
+		const char32_t actual =
+			shemi_phoenician_convert(original, SHEMI_PHOENICIAN, SHEMI_ARAMAIC);
+		if (actual != expected) ADD_FAILURE() << std::hex <<
+			"Conversion changed foreign character 0x" << original <<
+			" to 0x" << actual;
+		else SUCCEED() << std::hex << "0x" << original << " unchanged";
 	}
 }

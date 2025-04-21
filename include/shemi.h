@@ -89,6 +89,13 @@ HFN char32_t shemi_phoenician_convert_unchecked(
 	return c + (to - from);
 }
 
+HFN char32_t shemi_phoenician_convert(
+	char32_t c, char32_t from, char32_t to
+) {
+	if (c < from || c > (from + 22)) return c;
+	return shemi_phoenician_convert_unchecked(c, from, to);
+}
+
 #ifdef __cplusplus
 }
 #endif
