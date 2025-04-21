@@ -14,6 +14,14 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   >
 )
 
+option(SHEMI_ENABLE_AVX2 "Enable AVX2" ON)
+if (SHEMI_ENABLE_AVX2)
+	target_compile_options(${PROJECT_NAME} PRIVATE
+		$<$<AND:$<CXX_COMPILER_ID:GNU,Clang>>:-mavx2>
+		$<$<CXX_COMPILER_ID:MSVC>:/arch:AVX2>
+	)
+endif()
+
 option(SHEMI_ENABLE_TESTING "Build test suite" OFF)
 option(SHEMI_ENABLE_BENCHMARKS "Build benchmarks" OFF)
 if (SHEMI_ENABLE_TESTING OR SHEMI_ENABLE_BENCHMARKS)
