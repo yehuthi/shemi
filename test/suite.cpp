@@ -2,45 +2,82 @@
 #include <stdint.h>
 #include "shemi.h"
 
-#define LETTER(NAME, HEBR, PHNX) \
-	TEST(hebrew_convert_phoenician, NAME) { \
-		const uint32_t actual = shemi_hebrew_convert(HEBR, SHEMI_PHOENICIAN);  \
-		EXPECT_EQ(PHNX, actual) << std::hex << " expected: "                   \
-			"f(0x" << HEBR << ") = 0x" << PHNX << " but got 0x" << actual; }
-#include "hebr_to_phnx.inc.h"
-#undef LETTER
+#define SUCCEED_REPORT 1
+#ifdef SUCCEED_REPORT
+#undef SUCCEED
+class TestCout : public std::stringstream {
+public:
+    ~TestCout() {
+        std::cout
+			<< "\u001b[32m[  SUCCESS ] \u001b[33m"
+			<< str()
+			<< "\u001b[0m"
+			<< std::endl << std::flush;
+    }
+};
+#define SUCCEED() TestCout()
+#endif
 
-TEST(hebrew_convert_non_hebrew, latin_a) {
-	EXPECT_EQ('a', shemi_hebrew_convert('a', SHEMI_PHOENICIAN));
+#include "test_data.h"
+static const char32_t* PHOENICIANS[] = { PHNX, ARMI, SAMR };
+static const size_t PHOENICIANS_COUNT =
+	sizeof(PHOENICIANS) / sizeof(PHOENICIANS[0]);
+static const char* PHOENICIANS_NAMES[] =
+	{ "Phoenician", "Aramaic", "Samaritan" };
+static const char32_t PHOENICIANS_TAGS[] =
+	{ SHEMI_PHOENICIAN, SHEMI_ARAMAIC, SHEMI_SAMARITAN };
+static const char32_t* PHOENICIANS_FROM_HEBREW[] =
+	{ PHNX_FROM_HEBREW, ARMI_FROM_HEBREW, SAMR_FROM_HEBREW };
+
+TEST(hebrew_convert, phoenicians) {
+	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
+		const char32_t *const expected_script = PHOENICIANS_FROM_HEBREW[s];
+		for (size_t i = 0; i < HEBR_LEN; i++) {
+			const char32_t original = HEBR[i];
+			const char32_t actual =
+				shemi_hebrew_convert(original, PHOENICIANS_TAGS[s]);
+			const char32_t expected = expected_script[i];
+			if (actual != expected) ADD_FAILURE() << std::hex <<
+				"Hebrew 0x" << original << " = " <<
+				PHOENICIANS_NAMES[s] << " 0x" << expected <<
+				" but conversion gave 0x" << actual;
+			else SUCCEED() << std::hex <<
+				"Hebrew 0x" << original << " = " <<
+				PHOENICIANS_NAMES[s] << " 0x" << expected;
+		}
+	}
 }
 
-#define HEBR_ALEF 0x05D0
-#define HEBR_TAW 0x05EA
-#define PHNX_TAW 0x10915
-#define ARAM_TAW 0x10855
-
-TEST(hebrew_convert_aramaic, alef) {
-	EXPECT_EQ(0x10840, shemi_hebrew_convert(HEBR_ALEF, SHEMI_ARAMAIC));
+TEST(hebrew_convert, foreign) {
+	for (size_t i = 0; i < FOREIGN_LEN; i++) {
+		const char32_t original = FOREIGN[i];
+		const char32_t expected = original;
+		const char32_t actual =
+			shemi_hebrew_convert(original, SHEMI_PHOENICIAN);
+		if (actual != expected) ADD_FAILURE() << std::hex <<
+			"Conversion changed foreign character 0x" << original <<
+			" to 0x" << actual;
+		else SUCCEED() << std::hex << "0x" << original << " unchanged";
+	}
 }
 
-TEST(hebrew_convert_aramaic, taw) {
-	EXPECT_EQ(0x10855, shemi_hebrew_convert(HEBR_TAW, SHEMI_ARAMAIC));
-}
-
-TEST(hebrew_convert_samaritan, alef) {
-	EXPECT_EQ(0x0800, shemi_hebrew_convert(HEBR_ALEF, SHEMI_SAMARITAN));
-}
-
-TEST(hebrew_convert_samaritan, taw) {
-	EXPECT_EQ(0x0815, shemi_hebrew_convert(HEBR_TAW, SHEMI_SAMARITAN));
-}
-
-TEST(phoenician_convert, phoenician_to_aramaic_taw) {
-	EXPECT_EQ(
-		ARAM_TAW,
-		shemi_phoenician_convert_unchecked(
-			PHNX_TAW,
-			SHEMI_PHOENICIAN, SHEMI_ARAMAIC
-		)
-	);
+TEST(phoenician_convert, phoenicians) {
+	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
+		for (size_t d = 0; d < PHOENICIANS_COUNT; d++) {
+			for (size_t i = 0; i < PHNX_LEN; i++) {
+				const char32_t original = PHOENICIANS[s][i];
+				const char32_t expected = PHOENICIANS[d][i];
+				const char32_t actual = shemi_phoenician_convert_unchecked(
+					original, PHOENICIANS_TAGS[s], PHOENICIANS_TAGS[d]
+				);
+				if (actual != expected) ADD_FAILURE() << std::hex <<
+					PHOENICIANS_NAMES[s] << " 0x" << original << " = " <<
+					PHOENICIANS_NAMES[d] << " 0x" << expected << ", but got " <<
+					"0x" << actual;
+				else SUCCEED() << std::hex << 
+					PHOENICIANS_NAMES[s] << " 0x" << original << " = " <<
+					PHOENICIANS_NAMES[d] << " 0x" << expected;
+			}
+		}
+	}
 }
