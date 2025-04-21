@@ -114,6 +114,13 @@ void _shemi_phoenician_convert_inter_string_avx2(
 );
 //#endif
 
+
+//#if defined(__SSE4_2__)
+void _shemi_phoenician_convert_inter_string_sse4_2(
+	char32_t *const ptr, size_t len, char32_t from, char32_t to
+);
+//#endif
+
 HFN_ void shemi_phoenician_convert_inter_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {

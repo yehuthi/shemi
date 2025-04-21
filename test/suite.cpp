@@ -104,3 +104,13 @@ TEST(phoenician_convert_inter_string, avx2) {
 	for (size_t i = 0; i < PHNX_LEN; i++)
 		EXPECT_EQ(phnx[i], ARMI[i]) << " at i = " << i;
 }
+TEST(phoenician_convert_inter_string, sse4_2) {
+	char32_t phnx[sizeof(PHNX)];
+	memcpy(phnx, PHNX, sizeof(PHNX));
+	_shemi_phoenician_convert_inter_string_sse4_2(
+		phnx, PHNX_LEN,
+		SHEMI_PHNX, SHEMI_ARMI
+	);
+	for (size_t i = 0; i < PHNX_LEN; i++)
+		EXPECT_EQ(phnx[i], ARMI[i]) << " at i = " << i;
+}

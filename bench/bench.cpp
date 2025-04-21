@@ -107,6 +107,28 @@ static void BM_phoenician_convert_inter_string_avx2_fuzzy(
 	delete[] phnx;
 }
 
+static void BM_phoenician_convert_inter_string_sse4_2_fuzzy(
+	benchmark::State &state
+) {
+	const size_t size = state.range(0);
+	const size_t len = size / sizeof(char32_t);
+	char32_t *master = new char32_t[len];
+	fuzzy_data(master, len);
+	char32_t *phnx = new char32_t[len];
+	for (auto _ : state) {
+		memcpy(phnx, master, size);
+		benchmark::DoNotOptimize(phnx);
+		benchmark::ClobberMemory();
+		_shemi_phoenician_convert_inter_string_sse4_2(
+			phnx, len,
+			SHEMI_PHNX, SHEMI_ARMI
+		);
+		benchmark::ClobberMemory();
+	}
+	delete[] master;
+	delete[] phnx;
+}
+
 BENCHMARK(BM_hebrew_convert);
 BENCHMARK(BM_phoenician_convert_inter);
 BENCHMARK(BM_phoenician_convert_inter_string_scalar_alphabet);
@@ -114,4 +136,6 @@ BENCHMARK(BM_phoenician_convert_inter_string_avx2_alphabet);
 BENCHMARK(BM_phoenician_convert_inter_string_scalar_fuzzy)
 	->Arg(32)->Range(16, 1 << 20);
 BENCHMARK(BM_phoenician_convert_inter_string_avx2_fuzzy)
+	->Arg(32)->Range(16, 1 << 20);
+BENCHMARK(BM_phoenician_convert_inter_string_sse4_2_fuzzy)
 	->Arg(32)->Range(16, 1 << 20);
