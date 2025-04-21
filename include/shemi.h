@@ -17,10 +17,10 @@ extern "C" {
   #define HFN static inline
 #endif
 
-#define SHEMI_PHOENICIAN (0x10900)
-#define SHEMI_HEBREW     (0x005D0)
-#define SHEMI_ARAMAIC    (0x10840)
-#define SHEMI_SAMARITAN  (0x00800)
+#define SHEMI_PHNX (0x10900)
+#define SHEMI_HEBR (0x005D0)
+#define SHEMI_ARMI (0x10840)
+#define SHEMI_SAMR (0x00800)
 
 HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
 	return low <= value && value <= high;
@@ -83,17 +83,17 @@ HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	return c;
 }
 
-HFN char32_t shemi_phoenician_convert_unchecked(
+HFN char32_t shemi_phoenician_convert_inter_unchecked(
 	char32_t c, char32_t from, char32_t to
 ) {
 	return c + (to - from);
 }
 
-HFN char32_t shemi_phoenician_convert(
+HFN char32_t shemi_phoenician_convert_inter(
 	char32_t c, char32_t from, char32_t to
 ) {
 	if (c < from || c > (from + 22)) return c;
-	return shemi_phoenician_convert_unchecked(c, from, to);
+	return shemi_phoenician_convert_inter_unchecked(c, from, to);
 }
 
 #ifdef __cplusplus

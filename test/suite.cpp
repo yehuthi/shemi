@@ -25,7 +25,7 @@ static const size_t PHOENICIANS_COUNT =
 static const char* PHOENICIANS_NAMES[] =
 	{ "Phoenician", "Aramaic", "Samaritan" };
 static const char32_t PHOENICIANS_TAGS[] =
-	{ SHEMI_PHOENICIAN, SHEMI_ARAMAIC, SHEMI_SAMARITAN };
+	{ SHEMI_PHNX, SHEMI_ARMI, SHEMI_SAMR };
 static const char32_t* PHOENICIANS_FROM_HEBREW[] =
 	{ PHNX_FROM_HEBREW, ARMI_FROM_HEBREW, SAMR_FROM_HEBREW };
 
@@ -53,7 +53,7 @@ TEST(hebrew_convert, foreign) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
 		const char32_t actual =
-			shemi_hebrew_convert(original, SHEMI_PHOENICIAN);
+			shemi_hebrew_convert(original, SHEMI_PHNX);
 		if (actual != expected) ADD_FAILURE() << std::hex <<
 			"Conversion changed foreign character 0x" << original <<
 			" to 0x" << actual;
@@ -67,7 +67,7 @@ TEST(phoenician_convert, phoenicians) {
 			for (size_t i = 0; i < PHNX_LEN; i++) {
 				const char32_t original = PHOENICIANS[s][i];
 				const char32_t expected = PHOENICIANS[d][i];
-				const char32_t actual = shemi_phoenician_convert(
+				const char32_t actual = shemi_phoenician_convert_inter(
 					original, PHOENICIANS_TAGS[s], PHOENICIANS_TAGS[d]
 				);
 				if (actual != expected) ADD_FAILURE() << std::hex <<
@@ -87,7 +87,7 @@ TEST(phoenician_convert, foreign) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
 		const char32_t actual =
-			shemi_phoenician_convert(original, SHEMI_PHOENICIAN, SHEMI_ARAMAIC);
+			shemi_phoenician_convert_inter(original, SHEMI_PHNX, SHEMI_ARMI);
 		if (actual != expected) ADD_FAILURE() << std::hex <<
 			"Conversion changed foreign character 0x" << original <<
 			" to 0x" << actual;
