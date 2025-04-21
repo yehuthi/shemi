@@ -94,3 +94,13 @@ TEST(phoenician_convert, foreign) {
 		else SUCCEED() << std::hex << "0x" << original << " unchanged";
 	}
 }
+TEST(phoenician_convert_inter_string, avx2) {
+	char32_t phnx[sizeof(PHNX)];
+	memcpy(phnx, PHNX, sizeof(PHNX));
+	_shemi_phoenician_convert_inter_string_avx2(
+		phnx, PHNX_LEN,
+		SHEMI_PHNX, SHEMI_ARMI
+	);
+	for (size_t i = 0; i < PHNX_LEN; i++)
+		EXPECT_EQ(phnx[i], ARMI[i]) << " at i = " << i;
+}
