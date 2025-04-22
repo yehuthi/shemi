@@ -8,21 +8,21 @@ extern "C" {
 #include <uchar.h>
 #include <immintrin.h>
 
-// HFN (header fn)
+// _HFN (header fn)
 #ifdef __cplusplus
 	#if __cpp_constexpr >= 200704L
-		#define HFN constexpr
-		#define HFN_ inline
-		#define HFD constexpr
+		#define _HFN constexpr
+		#define _HFN_ inline
+		#define _HFD constexpr
 	#else
-		#define HFN inline
-		#define HFN_ HFN
-		#define HFD static const
+		#define _HFN inline
+		#define _HFN_ _HFN
+		#define _HFD static const
 	#endif
 #else
-	#define HFN static inline
-	#define HFN_ HFN
-	#define HFD static const
+	#define _HFN static inline
+	#define _HFN_ _HFN
+	#define _HFD static const
 #endif
 
 /** @defgroup scripts Scripts */
@@ -43,27 +43,27 @@ extern "C" {
 /// @ingroup scripts scripts_phnx
 #define SHEMI_SAMR (0x00800)
 
-HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
+_HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
 	return low <= value && value <= high;
 }
-#define BLOCK_FN(NAME, START, END)                  \
-	HFN bool shemi_block_##NAME(char32_t c) {       \
+#define _BLOCK_FN(NAME, START, END)                  \
+	_HFN bool shemi_block_##NAME(char32_t c) {       \
 		return _shemi_char_in_range(START, END, c); \
 	}
-BLOCK_FN(hebrew             , 0x00590, 0x005FF)
-BLOCK_FN(hebrew_alphabet    , 0x005D0, 0x005EA)
-BLOCK_FN(hebrew_cantillation, 0x00591, 0x005AF)
-BLOCK_FN(phoenician         , 0x10900, 0x1091F)
-BLOCK_FN(phoenician_alphabet, 0x10900, 0x10915)
-BLOCK_FN(phoenician_number  , 0x10916, 0x1091B)
-BLOCK_FN(aramaic            , 0x10840, 0x1085F)
-BLOCK_FN(aramaic_alphabet   , 0x10840, 0x10855)
-BLOCK_FN(aramaic_number     , 0x10858, 0x1085F)
-BLOCK_FN(samaritan          , 0x00800, 0x0083F)
-BLOCK_FN(samaritan_alphabet , 0x00800, 0x00815)
-#undef BLOCK_FN
+_BLOCK_FN(hebrew             , 0x00590, 0x005FF)
+_BLOCK_FN(hebrew_alphabet    , 0x005D0, 0x005EA)
+_BLOCK_FN(hebrew_cantillation, 0x00591, 0x005AF)
+_BLOCK_FN(phoenician         , 0x10900, 0x1091F)
+_BLOCK_FN(phoenician_alphabet, 0x10900, 0x10915)
+_BLOCK_FN(phoenician_number  , 0x10916, 0x1091B)
+_BLOCK_FN(aramaic            , 0x10840, 0x1085F)
+_BLOCK_FN(aramaic_alphabet   , 0x10840, 0x10855)
+_BLOCK_FN(aramaic_number     , 0x10858, 0x1085F)
+_BLOCK_FN(samaritan          , 0x00800, 0x0083F)
+_BLOCK_FN(samaritan_alphabet , 0x00800, 0x00815)
+#undef _BLOCK_FN
 
-HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
+_HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 10, 11, 12, 12, 13, 13, 14,
 	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
@@ -75,7 +75,7 @@ HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 /// `[0x05D0-0x05EA]`
 /// @see shemi_hebrew_to_phoenician
 /// @return The equivalent Phoenician-equivalent for `c`
-HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
+_HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
 	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
@@ -85,7 +85,7 @@ HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
 /// @see shemi_hebrew_to_phoenician_unchecked
 /// @return The equivalent Phoenician-equivalent for `c`, or `c` if the given
 /// character is not Hebrew.
-HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
+_HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
 	return shemi_block_hebrew_alphabet(c) ?
 		shemi_hebrew_to_phoenician_unchecked(c, target) : c;
 }
@@ -102,31 +102,31 @@ const uint8_t _SHEMI_HEBREW_SOFIYOT_COUNT =
 /// @brief Checks if the given character is a Hebrew sofit (final) letter.
 /// @param c A character
 /// @return Whether `c` is sofit.
-HFN bool shemi_hebrew_is_sofit(char32_t c) {
+_HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return true;
 	return false;
 }
 
-HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
+_HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return c - 1;
 	return c;
 }
 
-HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
+_HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_SOFIYOT[i] == c) return c + 1;
 	return c;
 }
 
-HFN char32_t shemi_phoenician_to_phoenician_unchecked(
+_HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	char32_t c, char32_t from, char32_t to
 ) {
 	return c + (to - from);
 }
 
-HFN char32_t shemi_phoenician_to_phoenician(
+_HFN char32_t shemi_phoenician_to_phoenician(
 	char32_t c, char32_t from, char32_t to
 ) {
 	if (c < from || c > (from + 22)) return c;
@@ -150,7 +150,7 @@ void _shemi_phoenician_to_phoenician_string_sse4_2(
 );
 #endif
 
-HFN_ void shemi_phoenician_to_phoenician_string(
+_HFN_ void shemi_phoenician_to_phoenician_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
 	// For small inputs (< 16) prefer SSE 4.2, for larger prefer AVX2
