@@ -33,16 +33,16 @@ extern "C" {
  * @ingroup scripts
  */
 
-/// @brief Phoenician script
+/// @brief Phoenician script.
 /// @ingroup scripts scripts_phnx
 #define SHEMI_PHNX (0x10900)
-/// @brief Hebrew script
+/// @brief Hebrew script.
 /// @ingroup scripts
 #define SHEMI_HEBR (0x005D0)
-/// @brief Imperial-Aramaic script
+/// @brief Imperial-Aramaic script.
 /// @ingroup scripts scripts_phnx
 #define SHEMI_ARMI (0x10840)
-/// @brief Samaritan script
+/// @brief Samaritan script.
 /// @ingroup scripts scripts_phnx
 #define SHEMI_SAMR (0x00800)
 
@@ -71,21 +71,21 @@ _HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
-/// @brief Converts a Hebrew character to a Phoenician-family script character
-/// @param c A Hebrew alphabet character
-/// @param target The target Phoenician-family script (see @ref scripts_phnx)
+/// @brief Converts a Hebrew character to a Phoenician-family script character.
+/// @param c A Hebrew alphabet character.
+/// @param target The target Phoenician-family script (see @ref scripts_phnx).
 /// @warning The given character `c` MUST be within the Hebrew alphabet range
-/// `[0x05D0-0x05EA]`
-/// @see shemi_hebrew_to_phoenician
-/// @return The equivalent Phoenician-equivalent for `c`
+/// `[0x05D0-0x05EA]`.
+/// @see `shemi_hebrew_to_phoenician`.
+/// @return The equivalent Phoenician-equivalent for `c`.
 _HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
 	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
-/// @brief Converts a Hebrew character to a Phoenician-family script character
-/// @param c A character
-/// @param target The target Phoenician-family script (see @ref scripts_phnx)
-/// @see shemi_hebrew_to_phoenician_unchecked
+/// @brief Converts a Hebrew character to a Phoenician-family script character.
+/// @param c A character.
+/// @param target The target Phoenician-family script (see @ref scripts_phnx).
+/// @see `shemi_hebrew_to_phoenician_unchecked`.
 /// @return The equivalent Phoenician-equivalent for `c`, or `c` if the given
 /// character is not Hebrew.
 _HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
@@ -103,7 +103,7 @@ const uint8_t _SHEMI_HEBREW_SOFIYOT_COUNT =
 	sizeof(_SHEMI_HEBREW_SOFIYOT) / sizeof(_SHEMI_HEBREW_SOFIYOT[0]);
 
 /// @brief Checks if the given character is a Hebrew sofit (final) letter.
-/// @param c A character
+/// @param c A character.
 /// @return Whether `c` is sofit.
 _HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
@@ -112,7 +112,7 @@ _HFN bool shemi_hebrew_is_sofit(char32_t c) {
 }
 
 /// @brief Converts a Hebrew character to its sofit (final) variant.
-/// @param c A character
+/// @param c A character.
 /// @return The sofit variant of `c`, or `c` if not applicable.
 _HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
@@ -121,7 +121,7 @@ _HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 }
 
 /// @brief Converts a Hebrew character to its non-sofit (non-final) variant.
-/// @param c A character
+/// @param c A character.
 /// @return The non-sofit variant of `c`, or `c` if not applicable.
 _HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
@@ -130,13 +130,14 @@ _HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 }
 
 /// @brief Converts a Phoenician-family character from one Phoenician-family
-/// script to another
-/// @param c The Phoenician-family character
-/// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to
-/// @param to The Phoenician-family script (@ref scripts_phnx) to convert to
+/// script to another.
+/// @param c The Phoenician-family character.
+/// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to.
+/// @param to The Phoenician-family script (@ref scripts_phnx) to convert to.
 /// @warning The given character `c` MUST be within the `from`'s alphabet
 /// character range.
-/// @see shemi_phoenician_to_phoenician, shemi_phoenician_to_phoenician_string
+/// @see `shemi_phoenician_to_phoenician`,
+/// `shemi_phoenician_to_phoenician_string`
 /// @return The equivalent for `c` in the `to` script family.
 _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	char32_t c, char32_t from, char32_t to
@@ -149,8 +150,8 @@ _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 /// @param c The Phoenician-family character.
 /// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to.
 /// @param to The Phoenician-family script (@ref scripts_phnx) to convert to.
-/// @see shemi_phoenician_to_phoenician_unchecked,
-/// shemi_phoenician_to_phoenician_string.
+/// @see `shemi_phoenician_to_phoenician_unchecked`,
+/// `shemi_phoenician_to_phoenician_string`.
 /// @return The equivalent for `c` in the `to` script family, or `c` if `c` does
 /// not belong to `from`.
 _HFN char32_t shemi_phoenician_to_phoenician(
