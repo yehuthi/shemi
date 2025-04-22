@@ -55,13 +55,13 @@ HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
-HFN char32_t shemi_hebrew_convert_unchecked(char32_t c, char32_t target) {
+HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
 	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
-HFN char32_t shemi_hebrew_convert(char32_t c, char32_t target) {
+HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
 	return shemi_block_hebrew_alphabet(c) ?
-		shemi_hebrew_convert_unchecked(c, target) : c;
+		shemi_hebrew_to_phoenician_unchecked(c, target) : c;
 }
 
 static const char32_t _SHEMI_HEBREW_SOFIYOT[] = {
@@ -73,7 +73,7 @@ static const char32_t _SHEMI_HEBREW_NOT_SOFIYOT[] = {
 const uint8_t _SHEMI_HEBREW_SOFIYOT_COUNT =
 	sizeof(_SHEMI_HEBREW_SOFIYOT) / sizeof(_SHEMI_HEBREW_SOFIYOT[0]);
 
-HFN bool shemi_hebrew_sofit(char32_t c) {
+HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return true;
 	return false;
@@ -91,58 +91,57 @@ HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	return c;
 }
 
-HFN char32_t shemi_phoenician_convert_inter_unchecked(
+HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	char32_t c, char32_t from, char32_t to
 ) {
 	return c + (to - from);
 }
 
-HFN char32_t shemi_phoenician_convert_inter(
+HFN char32_t shemi_phoenician_to_phoenician(
 	char32_t c, char32_t from, char32_t to
 ) {
 	if (c < from || c > (from + 22)) return c;
-	return shemi_phoenician_convert_inter_unchecked(c, from, to);
+	return shemi_phoenician_to_phoenician_unchecked(c, from, to);
 }
 
-void _shemi_phoenician_convert_inter_string_scalar(
+void _shemi_phoenician_to_phoenician_string_scalar(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
 
 #if defined(__AVX2__)
-void _shemi_phoenician_convert_inter_string_avx2(
+void _shemi_phoenician_to_phoenician_string_avx2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
 #endif
 
 
 #if defined(__SSE4_2__)
-void _shemi_phoenician_convert_inter_string_sse4_2(
+void _shemi_phoenician_to_phoenician_string_sse4_2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
 #endif
 
-HFN_ void shemi_phoenician_convert_inter_string(
+HFN_ void shemi_phoenician_to_phoenician_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
 	// For small inputs (< 16) prefer SSE 4.2, for larger prefer AVX2
 #if defined(__AVX2__) && defined(__SSE4_2__)
 	if (len < 16)
-		_shemi_phoenician_convert_inter_string_sse4_2(ptr, len, from, to);
+		_shemi_phoenician_to_phoenician_string_sse4_2(ptr, len, from, to);
 	else
-		_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+		_shemi_phoenician_to_phoenician_string_avx2(ptr, len, from, to);
 #elif defined(__AVX2__)
 	if (len < 16)
-		_shemi_phoenician_convert_inter_string_scalar(ptr, len, from, to);
+		_shemi_phoenician_to_phoenician_string_scalar(ptr, len, from, to);
 	else
-		_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+		_shemi_phoenician_to_phoenician_string_avx2(ptr, len, from, to);
 #elif defined(__SSE4_2__)
-	_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+	_shemi_phoenician_to_phoenician_string_avx2(ptr, len, from, to);
 #else
-	_shemi_phoenician_convert_inter_string_scalar(ptr, len, from, to);
+	_shemi_phoenician_to_phoenician_string_scalar(ptr, len, from, to);
 #endif
 }
 
 #ifdef __cplusplus
 }
 #endif
-

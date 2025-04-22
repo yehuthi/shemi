@@ -1,15 +1,15 @@
 #include "shemi.h"
 #include <emmintrin.h>
 
-void _shemi_phoenician_convert_inter_string_scalar(
+void _shemi_phoenician_to_phoenician_string_scalar(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
 	for (size_t i = 0; i < len; i++)
-		ptr[i] = shemi_phoenician_convert_inter(ptr[i], from, to);
+		ptr[i] = shemi_phoenician_to_phoenician(ptr[i], from, to);
 }
 
 #if defined(__AVX2__)
-void _shemi_phoenician_convert_inter_string_avx2(
+void _shemi_phoenician_to_phoenician_string_avx2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
 	const __m256i alef_p = _mm256_set1_epi32(from - 1);
@@ -31,12 +31,12 @@ void _shemi_phoenician_convert_inter_string_avx2(
 		_mm256_storeu_si256((__m256i*)&ptr[i], masked);
 	}
 
-	_shemi_phoenician_convert_inter_string_scalar(&ptr[i], len - i, from, to);
+	_shemi_phoenician_to_phoenician_string_scalar(&ptr[i], len - i, from, to);
 }
 #endif
 
 #if defined(__SSE4_2__)
-void _shemi_phoenician_convert_inter_string_sse4_2(
+void _shemi_phoenician_to_phoenician_string_sse4_2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
 	const __m128i alef_p = _mm_set1_epi32(from - 1);
@@ -58,6 +58,6 @@ void _shemi_phoenician_convert_inter_string_sse4_2(
 		_mm_storeu_si128((void*)&ptr[i], masked);
 	}
 
-	_shemi_phoenician_convert_inter_string_scalar(&ptr[i], len - i, from, to);
+	_shemi_phoenician_to_phoenician_string_scalar(&ptr[i], len - i, from, to);
 }
 #endif

@@ -29,13 +29,13 @@ static const char32_t PHOENICIANS_TAGS[] =
 static const char32_t* PHOENICIANS_FROM_HEBREW[] =
 	{ PHNX_FROM_HEBREW, ARMI_FROM_HEBREW, SAMR_FROM_HEBREW };
 
-TEST(hebrew_convert, phoenicians) {
+TEST(convert, hebrew_to_phoenician) {
 	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
 		const char32_t *const expected_script = PHOENICIANS_FROM_HEBREW[s];
 		for (size_t i = 0; i < HEBR_LEN; i++) {
 			const char32_t original = HEBR[i];
 			const char32_t actual =
-				shemi_hebrew_convert(original, PHOENICIANS_TAGS[s]);
+				shemi_hebrew_to_phoenician(original, PHOENICIANS_TAGS[s]);
 			const char32_t expected = expected_script[i];
 			if (actual != expected) ADD_FAILURE() << std::hex <<
 				"Hebrew 0x" << original << " = " <<
@@ -48,12 +48,12 @@ TEST(hebrew_convert, phoenicians) {
 	}
 }
 
-TEST(hebrew_convert, foreign) {
+TEST(convert, hebrew_to_phoenician_foreign) {
 	for (size_t i = 0; i < FOREIGN_LEN; i++) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
 		const char32_t actual =
-			shemi_hebrew_convert(original, SHEMI_PHNX);
+			shemi_hebrew_to_phoenician(original, SHEMI_PHNX);
 		if (actual != expected) ADD_FAILURE() << std::hex <<
 			"Conversion changed foreign character 0x" << original <<
 			" to 0x" << actual;
@@ -61,13 +61,13 @@ TEST(hebrew_convert, foreign) {
 	}
 }
 
-TEST(phoenician_convert, phoenicians) {
+TEST(convert, phoenician_to_phoenician) {
 	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
 		for (size_t d = 0; d < PHOENICIANS_COUNT; d++) {
 			for (size_t i = 0; i < PHNX_LEN; i++) {
 				const char32_t original = PHOENICIANS[s][i];
 				const char32_t expected = PHOENICIANS[d][i];
-				const char32_t actual = shemi_phoenician_convert_inter(
+				const char32_t actual = shemi_phoenician_to_phoenician(
 					original, PHOENICIANS_TAGS[s], PHOENICIANS_TAGS[d]
 				);
 				if (actual != expected) ADD_FAILURE() << std::hex <<
@@ -82,12 +82,12 @@ TEST(phoenician_convert, phoenicians) {
 	}
 }
 
-TEST(phoenician_convert, foreign) {
+TEST(convert, phoenician_to_foreign) {
 	for (size_t i = 0; i < FOREIGN_LEN; i++) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
 		const char32_t actual =
-			shemi_phoenician_convert_inter(original, SHEMI_PHNX, SHEMI_ARMI);
+			shemi_phoenician_to_phoenician(original, SHEMI_PHNX, SHEMI_ARMI);
 		if (actual != expected) ADD_FAILURE() << std::hex <<
 			"Conversion changed foreign character 0x" << original <<
 			" to 0x" << actual;
@@ -95,10 +95,10 @@ TEST(phoenician_convert, foreign) {
 	}
 }
 #if defined(__AVX2__)
-TEST(phoenician_convert_inter_string, avx2) {
+TEST(convert, phoenician_to_phoenician_avx2) {
 	char32_t phnx[sizeof(PHNX)];
 	memcpy(phnx, PHNX, sizeof(PHNX));
-	_shemi_phoenician_convert_inter_string_avx2(
+	_shemi_phoenician_to_phoenician_string_avx2(
 		phnx, PHNX_LEN,
 		SHEMI_PHNX, SHEMI_ARMI
 	);
@@ -108,10 +108,10 @@ TEST(phoenician_convert_inter_string, avx2) {
 #endif
 
 #if defined(__SSE4_2__)
-TEST(phoenician_convert_inter_string, sse4_2) {
+TEST(convert, phoenician_to_phoenician_sse4_2) {
 	char32_t phnx[sizeof(PHNX)];
 	memcpy(phnx, PHNX, sizeof(PHNX));
-	_shemi_phoenician_convert_inter_string_sse4_2(
+	_shemi_phoenician_to_phoenician_string_sse4_2(
 		phnx, PHNX_LEN,
 		SHEMI_PHNX, SHEMI_ARMI
 	);
