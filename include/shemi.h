@@ -25,9 +25,22 @@ extern "C" {
 	#define HFD static const
 #endif
 
+/** @defgroup scripts Scripts */
+/** @defgroup scripts_phnx Phoenician Scripts
+ * @ingroup scripts
+ */
+
+/// @brief Phoenician script
+/// @ingroup scripts scripts_phnx
 #define SHEMI_PHNX (0x10900)
+/// @brief Hebrew script
+/// @ingroup scripts
 #define SHEMI_HEBR (0x005D0)
+/// @brief Imperial-Aramaic script
+/// @ingroup scripts scripts_phnx
 #define SHEMI_ARMI (0x10840)
+/// @brief Samaritan script
+/// @ingroup scripts scripts_phnx
 #define SHEMI_SAMR (0x00800)
 
 HFN bool _shemi_char_in_range(char32_t low, char32_t high, char32_t value) {
@@ -55,10 +68,23 @@ HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
+/// @brief Converts a Hebrew character to a Phoenician-family script character
+/// @param c A Hebrew alphabet character
+/// @param target The target Phoenician-family script (see @ref scripts_phnx)
+/// @warning The given character `c` MUST be within the Hebrew alphabet range
+/// `[0x05D0-0x05EA]`
+/// @see shemi_hebrew_to_phoenician
+/// @return The equivalent Phoenician-equivalent for `c`
 HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
 	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
+/// @brief Converts a Hebrew character to a Phoenician-family script character
+/// @param c A character
+/// @param target The target Phoenician-family script (see @ref scripts_phnx)
+/// @see shemi_hebrew_to_phoenician_unchecked
+/// @return The equivalent Phoenician-equivalent for `c`, or `c` if the given
+/// character is not Hebrew.
 HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
 	return shemi_block_hebrew_alphabet(c) ?
 		shemi_hebrew_to_phoenician_unchecked(c, target) : c;
@@ -73,6 +99,9 @@ static const char32_t _SHEMI_HEBREW_NOT_SOFIYOT[] = {
 const uint8_t _SHEMI_HEBREW_SOFIYOT_COUNT =
 	sizeof(_SHEMI_HEBREW_SOFIYOT) / sizeof(_SHEMI_HEBREW_SOFIYOT[0]);
 
+/// @brief Checks if the given character is a Hebrew sofit (final) letter.
+/// @param c A character
+/// @return Whether `c` is sofit.
 HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return true;
