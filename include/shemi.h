@@ -8,7 +8,10 @@ extern "C" {
 #include <uchar.h>
 #include <immintrin.h>
 
-// _HFN (header fn)
+// Header function macros
+// _HFN  = constexpr-able function
+// _HFN_ = non constexpr-able function
+// _HFD = _HFN (constexpr-able) data
 #ifdef __cplusplus
 	#if __cpp_constexpr >= 200704L
 		#define _HFN constexpr
@@ -108,18 +111,33 @@ _HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	return false;
 }
 
+/// @brief Converts a Hebrew character to its sofit (final) variant.
+/// @param c A character
+/// @return The sofit variant of `c`, or `c` if not applicable.
 _HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return c - 1;
 	return c;
 }
 
+/// @brief Converts a Hebrew character to its non-sofit (non-final) variant.
+/// @param c A character
+/// @return The non-sofit variant of `c`, or `c` if not applicable.
 _HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_SOFIYOT[i] == c) return c + 1;
 	return c;
 }
 
+/// @brief Converts a Phoenician-family character from one Phoenician-family
+/// script to another
+/// @param c The Phoenician-family character
+/// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to
+/// @param to The Phoenician-family script (@ref scripts_phnx) to convert to
+/// @warning The given character `c` MUST be within the `from`'s alphabet
+/// character range.
+/// @see shemi_phoenician_to_phoenician, shemi_phoenician_to_phoenician_string
+/// @return The equivalent for `c` in the `to` script family.
 _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	char32_t c, char32_t from, char32_t to
 ) {
