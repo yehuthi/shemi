@@ -108,23 +108,38 @@ void _shemi_phoenician_convert_inter_string_scalar(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
 
-//#if defined(__AVX2__)
+#if defined(__AVX2__)
 void _shemi_phoenician_convert_inter_string_avx2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
-//#endif
+#endif
 
 
-//#if defined(__SSE4_2__)
+#if defined(__SSE4_2__)
 void _shemi_phoenician_convert_inter_string_sse4_2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
-//#endif
+#endif
 
 HFN_ void shemi_phoenician_convert_inter_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
+	// For small inputs (< 16) prefer SSE 4.2, for larger prefer AVX2
+#if defined(__AVX2__) && defined(__SSE4_2__)
+	if (len < 16)
+		_shemi_phoenician_convert_inter_string_sse4_2(ptr, len, from, to);
+	else
+		_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+#elif defined(__AVX2__)
+	if (len < 16)
+		_shemi_phoenician_convert_inter_string_scalar(ptr, len, from, to);
+	else
+		_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+#elif defined(__SSE4_2__)
+	_shemi_phoenician_convert_inter_string_avx2(ptr, len, from, to);
+#else
 	_shemi_phoenician_convert_inter_string_scalar(ptr, len, from, to);
+#endif
 }
 
 #ifdef __cplusplus

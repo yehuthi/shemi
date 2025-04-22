@@ -39,22 +39,6 @@ static void BM_phoenician_convert_inter_string_scalar_alphabet(
 	}
 }
 
-static void BM_phoenician_convert_inter_string_avx2_alphabet(
-	benchmark::State &state
-) {
-	alignas(32) char32_t phnx[sizeof(PHNX)];
-	for (auto _ : state) {
-		memcpy(phnx, PHNX, sizeof(PHNX));
-		benchmark::DoNotOptimize(phnx);
-		benchmark::ClobberMemory();
-		_shemi_phoenician_convert_inter_string_avx2(
-			phnx, PHNX_LEN,
-			SHEMI_PHNX, SHEMI_ARMI
-		);
-		benchmark::ClobberMemory();
-	}
-}
-
 static void fuzzy_data(char32_t *dest, size_t len) {
 	std::mt19937 rng;
 	std::uniform_int_distribution<char32_t> dist(
@@ -85,6 +69,23 @@ static void BM_phoenician_convert_inter_string_scalar_fuzzy(
 	delete[] phnx;
 }
 
+
+#if defined(__AVX2__)
+static void BM_phoenician_convert_inter_string_avx2_alphabet(
+	benchmark::State &state
+) {
+	alignas(32) char32_t phnx[sizeof(PHNX)];
+	for (auto _ : state) {
+		memcpy(phnx, PHNX, sizeof(PHNX));
+		benchmark::DoNotOptimize(phnx);
+		benchmark::ClobberMemory();
+		_shemi_phoenician_convert_inter_string_avx2(
+			phnx, PHNX_LEN,
+			SHEMI_PHNX, SHEMI_ARMI
+		);
+		benchmark::ClobberMemory();
+	}
+}
 static void BM_phoenician_convert_inter_string_avx2_fuzzy(
 	benchmark::State &state
 ) {
@@ -107,6 +108,12 @@ static void BM_phoenician_convert_inter_string_avx2_fuzzy(
 	delete[] phnx;
 }
 
+BENCHMARK(BM_phoenician_convert_inter_string_avx2_alphabet);
+BENCHMARK(BM_phoenician_convert_inter_string_avx2_fuzzy)
+	->Arg(32)->Range(16, 1 << 20);
+#endif
+
+#if defined(__SSE4_2__)
 static void BM_phoenician_convert_inter_string_sse4_2_fuzzy(
 	benchmark::State &state
 ) {
@@ -128,14 +135,12 @@ static void BM_phoenician_convert_inter_string_sse4_2_fuzzy(
 	delete[] master;
 	delete[] phnx;
 }
+BENCHMARK(BM_phoenician_convert_inter_string_sse4_2_fuzzy)
+	->Arg(32)->Range(16, 1 << 20);
+#endif
 
 BENCHMARK(BM_hebrew_convert);
 BENCHMARK(BM_phoenician_convert_inter);
 BENCHMARK(BM_phoenician_convert_inter_string_scalar_alphabet);
-BENCHMARK(BM_phoenician_convert_inter_string_avx2_alphabet);
 BENCHMARK(BM_phoenician_convert_inter_string_scalar_fuzzy)
-	->Arg(32)->Range(16, 1 << 20);
-BENCHMARK(BM_phoenician_convert_inter_string_avx2_fuzzy)
-	->Arg(32)->Range(16, 1 << 20);
-BENCHMARK(BM_phoenician_convert_inter_string_sse4_2_fuzzy)
 	->Arg(32)->Range(16, 1 << 20);

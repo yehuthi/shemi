@@ -94,6 +94,7 @@ TEST(phoenician_convert, foreign) {
 		else SUCCEED() << std::hex << "0x" << original << " unchanged";
 	}
 }
+#if defined(__AVX2__)
 TEST(phoenician_convert_inter_string, avx2) {
 	char32_t phnx[sizeof(PHNX)];
 	memcpy(phnx, PHNX, sizeof(PHNX));
@@ -104,6 +105,9 @@ TEST(phoenician_convert_inter_string, avx2) {
 	for (size_t i = 0; i < PHNX_LEN; i++)
 		EXPECT_EQ(phnx[i], ARMI[i]) << " at i = " << i;
 }
+#endif
+
+#if defined(__SSE4_2__)
 TEST(phoenician_convert_inter_string, sse4_2) {
 	char32_t phnx[sizeof(PHNX)];
 	memcpy(phnx, PHNX, sizeof(PHNX));
@@ -114,3 +118,4 @@ TEST(phoenician_convert_inter_string, sse4_2) {
 	for (size_t i = 0; i < PHNX_LEN; i++)
 		EXPECT_EQ(phnx[i], ARMI[i]) << " at i = " << i;
 }
+#endif
