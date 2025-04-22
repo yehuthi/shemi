@@ -144,6 +144,15 @@ _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	return c + (to - from);
 }
 
+/// @brief Converts a Phoenician-family character from one Phoenician-family
+/// script to another.
+/// @param c The Phoenician-family character.
+/// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to.
+/// @param to The Phoenician-family script (@ref scripts_phnx) to convert to.
+/// @see shemi_phoenician_to_phoenician_unchecked,
+/// shemi_phoenician_to_phoenician_string.
+/// @return The equivalent for `c` in the `to` script family, or `c` if `c` does
+/// not belong to `from`.
 _HFN char32_t shemi_phoenician_to_phoenician(
 	char32_t c, char32_t from, char32_t to
 ) {
@@ -161,13 +170,18 @@ void _shemi_phoenician_to_phoenician_string_avx2(
 );
 #endif
 
-
 #if defined(__SSE4_2__)
 void _shemi_phoenician_to_phoenician_string_sse4_2(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 );
 #endif
 
+/// @brief Converts a `char32_t` string from one Phoenician-script family to
+/// another.
+/// @param ptr The string.
+/// @param len The string length.
+/// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to.
+/// @param to The Phoenician-family script (@ref scripts_phnx) to convert to.
 _HFN_ void shemi_phoenician_to_phoenician_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
