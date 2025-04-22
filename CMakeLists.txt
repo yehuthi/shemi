@@ -21,12 +21,14 @@ if (SHEMI_ENABLE_AVX2)
 		$<$<AND:$<CXX_COMPILER_ID:GNU,Clang>>:-mavx2>
 		$<$<CXX_COMPILER_ID:MSVC>:/arch:AVX2>
 	)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE __AVX2__)
 endif()
 if (SHEMI_ENABLE_SSE4_2)
 	target_compile_options(${PROJECT_NAME} PUBLIC
 		$<$<AND:$<CXX_COMPILER_ID:GNU,Clang>>:-msse4.2>
 		$<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
 	)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE __SSE4_2__)
 endif()
 
 option(SHEMI_ENABLE_TESTING "Build test suite" OFF)
@@ -43,10 +45,22 @@ if (SHEMI_ENABLE_TESTING)
   target_link_libraries(${PROJECT_NAME}_test GTest::gtest_main ${PROJECT_NAME})
   include(GoogleTest)
   gtest_discover_tests(${PROJECT_NAME}_test)
+  if (SHEMI_ENABLE_SSE4_2)
+    target_compile_definitions(${PROJECT_NAME}_test PRIVATE __SSE4_2__)
+  endif()
+  if (SHEMI_ENABLE_AVX2)
+    target_compile_definitions(${PROJECT_NAME}_test PRIVATE __AVX2__)
+  endif()
 endif()
 if (SHEMI_ENABLE_BENCHMARKS)
   find_package(benchmark REQUIRED)
   add_executable(${PROJECT_NAME}_bench bench/bench.cpp)
   target_link_libraries(${PROJECT_NAME}_bench PRIVATE
     benchmark::benchmark_main ${PROJECT_NAME})
+  if (SHEMI_ENABLE_SSE4_2)
+    target_compile_definitions(${PROJECT_NAME}_bench PRIVATE __SSE4_2__)
+  endif()
+  if (SHEMI_ENABLE_AVX2)
+    target_compile_definitions(${PROJECT_NAME}_bench PRIVATE __AVX2__)
+  endif()
 endif()
