@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <random>
 #include "shemi.h"
+#include <stdint.h>
 #include "../test/test_data.h"
 
 static void BM_hebrew_convert(benchmark::State &state) {
@@ -41,7 +42,7 @@ static void BM_phoenician_convert_inter_string_scalar_alphabet(
 
 static void fuzzy_data(char32_t *dest, size_t len) {
 	std::mt19937 rng;
-	std::uniform_int_distribution<char32_t> dist(
+	std::uniform_int_distribution<uint32_t> dist(
 		0x10900 - 10, 0x10915 + 10
 	);
 	for (size_t i = 0; i < len; i++) dest[i] = dist(rng);
