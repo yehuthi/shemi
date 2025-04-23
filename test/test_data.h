@@ -16,3 +16,7 @@ static const char32_t PHNX_FROM_HEBREW[] = U"𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇�
 static const char32_t ARMI_FROM_HEBREW[] = U"𐡀𐡁𐡂𐡃𐡄𐡅𐡆𐡇𐡈𐡉𐡊𐡊𐡋𐡌𐡌𐡍𐡍𐡎𐡏𐡐𐡐𐡑𐡑𐡒𐡓𐡔𐡕";
 static const char32_t SAMR_FROM_HEBREW[] =
 	U"ࠀࠁࠂࠃࠄࠅࠆࠇࠈࠉࠊࠊࠋࠌࠌࠍࠍࠎࠏࠐࠐࠑࠑࠒࠓࠔࠕ";
+static const char32_t HEBR_FROM_PHNX_NO_SOFIYOT[] =
+	U"אבגדהוזחטיכלמנסעפצקרשת";
+static const char32_t HEBR_FROM_PHNX_SOFIYOT[] =
+	U"אבגדהוזחטיךלםןסעףץקרשת";

@@ -28,6 +28,13 @@ static const char32_t PHOENICIANS_TAGS[] =
 	{ SHEMI_PHNX, SHEMI_ARMI, SHEMI_SAMR };
 static const char32_t* PHOENICIANS_FROM_HEBREW[] =
 	{ PHNX_FROM_HEBREW, ARMI_FROM_HEBREW, SAMR_FROM_HEBREW };
+static const char32_t* HEBREWS_FROM_PHOENICIAN[] =
+	{ HEBR_FROM_PHNX_NO_SOFIYOT, HEBR_FROM_PHNX_SOFIYOT };
+static const char* HEBREWS_NAMES[] =
+	{ "Hebrew (No Sofiyot)", "Hebrew (Sofiyot)" };
+static const bool HEBREWS_TAGS[] = { true, false };
+const size_t HEBREWS_COUNT =
+	sizeof(HEBREWS_FROM_PHOENICIAN) / sizeof(HEBREWS_FROM_PHOENICIAN[0]);
 
 TEST(convert, hebrew_to_phoenician) {
 	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
@@ -77,6 +84,27 @@ TEST(convert, phoenician_to_phoenician) {
 				else SUCCEED() << std::hex << 
 					PHOENICIANS_NAMES[s] << " 0x" << original << " = " <<
 					PHOENICIANS_NAMES[d] << " 0x" << expected;
+			}
+		}
+	}
+}
+
+TEST(convert, phoenician_to_hebrew) {
+	for (size_t s = 0; s < PHOENICIANS_COUNT; s++) {
+		for (size_t d = 0; d < HEBREWS_COUNT; d++) {
+			for (size_t i = 0; i < PHNX_LEN; i++) {
+				const char32_t original = PHOENICIANS[s][i];
+				const char32_t expected = HEBREWS_FROM_PHOENICIAN[d][i];
+				const char32_t actual = shemi_phoenician_to_hebrew_unchecked(
+					original, PHOENICIANS_TAGS[s], HEBREWS_TAGS[d]
+				);
+				if (actual != expected) ADD_FAILURE() << std::hex <<
+					PHOENICIANS_NAMES[s] << " 0x" << original << " = " <<
+					HEBREWS_NAMES[d] << " 0x" << expected << ", but got " <<
+					"0x" << actual;
+				else SUCCEED() << std::hex <<
+					PHOENICIANS_NAMES[s] << " 0x" << original << " = " <<
+					HEBREWS_NAMES[d] << " 0x" << expected;
 			}
 		}
 	}

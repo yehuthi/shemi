@@ -28,6 +28,12 @@ extern "C" {
 	#define _HFD static const
 #endif
 
+#ifdef __cplusplus
+#define _DEFVAL(A) = A
+#else
+#define _DEFVAL(A)
+#endif
+
 /** @defgroup scripts Scripts */
 /** @defgroup scripts_phnx Phoenician Scripts
  * @ingroup scripts
@@ -68,8 +74,13 @@ _BLOCK_FN(samaritan_alphabet , 0x00800, 0x00815)
 
 _HFD char32_t _SHEMI_HEBREW_NORMALIZE_TABLE[] = {
 	0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 10, 11, 12, 12, 13, 13, 14,
-	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+	15, 16, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+	0
 };
+_HFD size_t _SHEMI_HEBREW_NORMALIZE_TABLE_LEN =
+	(sizeof(_SHEMI_HEBREW_NORMALIZE_TABLE) /
+	sizeof(_SHEMI_HEBREW_NORMALIZE_TABLE[0]))
+	- 1;
 
 /// @brief Converts a Hebrew character to a Phoenician-family script character.
 /// @param c A Hebrew alphabet character.
@@ -202,6 +213,23 @@ _HFN_ void shemi_phoenician_to_phoenician_string(
 #else
 	_shemi_phoenician_to_phoenician_string_scalar(ptr, len, from, to);
 #endif
+}
+
+_HFN char32_t shemi_phoenician_to_hebrew_unchecked(
+	char32_t c,
+	char32_t from,
+	bool not_sofiyot _DEFVAL(true)
+) {
+	const uint8_t offset = (uint8_t)(c - from);
+	for (uint8_t i = 0; i < _SHEMI_HEBREW_NORMALIZE_TABLE_LEN; i++) {
+		if (offset == _SHEMI_HEBREW_NORMALIZE_TABLE[i]) {
+			const bool sofitable =
+				_SHEMI_HEBREW_NORMALIZE_TABLE[i] ==
+				_SHEMI_HEBREW_NORMALIZE_TABLE[i + 1];
+			return 0x05D0 + i + (sofitable & not_sofiyot);
+		}
+	}
+	return c;
 }
 
 #ifdef __cplusplus
