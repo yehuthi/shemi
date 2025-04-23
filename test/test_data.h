@@ -9,7 +9,8 @@ static const size_t PHNX_LEN = sizeof(PHNX) / sizeof(PHNX[0]) - 1;
 static const char32_t ARMI[] = U"𐡀𐡁𐡂𐡃𐡄𐡅𐡆𐡇𐡈𐡉𐡊𐡋𐡌𐡍𐡎𐡏𐡐𐡑𐡒𐡓𐡔𐡕";
 static const char32_t SAMR[] = U"ࠀࠁࠂࠃࠄࠅࠆࠇࠈࠉࠊࠋࠌࠍࠎࠏࠐࠑࠒࠓࠔࠕ";
 static const char32_t FOREIGN[] = U"A\n ʃʰߞि֯५Ⅸ௰_–«»؟״∞₿˘⚔ʬ⍥⧗⸘⿻⽕㊙㍿"
-	U"🛰🌌🧬⚛ʒ₨∤⇌Ϟ☯ℤ𝒜⛷𐎀𑀓꧅𓂀𓇋𒀱ᚠ🐲♘🎭🚀💥🍜💎🪐🧠☘︎🎮⚖☄⎋⌬⧉∮";
+	U"🛰🌌🧬⚛ʒ₨∤⇌Ϟ☯ℤ𝒜⛷𐎀𑀓꧅𓂀𓇋𒀱ᚠ🐲♘🎭🚀💥🍜💎🪐🧠☘︎🎮⚖☄⎋⌬⧉∮"
+	U"\u05CF\u05EB\U000108FF\U00010916\U0001083F\U00010856\u07FF\u0816";
 static const size_t FOREIGN_LEN = sizeof(FOREIGN) / sizeof(FOREIGN[0]);
 
 static const char32_t PHNX_FROM_HEBREW[] = U"𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤊𐤋𐤌𐤌𐤍𐤍𐤎𐤏𐤐𐤐𐤑𐤑𐤒𐤓𐤔𐤕";

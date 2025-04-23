@@ -168,7 +168,7 @@ _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 _HFN char32_t shemi_phoenician_to_phoenician(
 	char32_t c, char32_t from, char32_t to
 ) {
-	if (c < from || c > (from + 22)) return c;
+	if (c < from || c > (from + 21)) return c;
 	return shemi_phoenician_to_phoenician_unchecked(c, from, to);
 }
 
@@ -247,7 +247,7 @@ _HFN char32_t shemi_phoenician_to_hebrew(
 	char32_t from,
 	bool not_sofiyot _DEFVAL(true)
 ) {
-	if (c <= from || c > (from + 22)) return c;
+	if (c <= from || c > (from + 21)) return c;
 	const uint8_t offset = (uint8_t)(c - from);
 	return _shemi_phoenician_to_hebrew_from_table_index_unchecked(
 		offset, c, not_sofiyot
