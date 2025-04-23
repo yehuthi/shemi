@@ -215,12 +215,11 @@ _HFN_ void shemi_phoenician_to_phoenician_string(
 #endif
 }
 
-_HFN char32_t shemi_phoenician_to_hebrew_unchecked(
+_HFN char32_t _shemi_phoenician_to_hebrew_from_table_index_unchecked(
+	uint8_t offset,
 	char32_t c,
-	char32_t from,
-	bool not_sofiyot _DEFVAL(true)
+	bool not_sofiyot
 ) {
-	const uint8_t offset = (uint8_t)(c - from);
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_NORMALIZE_TABLE_LEN; i++) {
 		if (offset == _SHEMI_HEBREW_NORMALIZE_TABLE[i]) {
 			const bool sofitable =
@@ -230,6 +229,29 @@ _HFN char32_t shemi_phoenician_to_hebrew_unchecked(
 		}
 	}
 	return c;
+}
+
+_HFN char32_t shemi_phoenician_to_hebrew_unchecked(
+	char32_t c,
+	char32_t from,
+	bool not_sofiyot _DEFVAL(true)
+) {
+	const uint8_t offset = (uint8_t)(c - from);
+	return _shemi_phoenician_to_hebrew_from_table_index_unchecked(
+		offset, c, not_sofiyot
+	);
+}
+
+_HFN char32_t shemi_phoenician_to_hebrew(
+	char32_t c,
+	char32_t from,
+	bool not_sofiyot _DEFVAL(true)
+) {
+	if (c <= from || c > (from + 22)) return c;
+	const uint8_t offset = (uint8_t)(c - from);
+	return _shemi_phoenician_to_hebrew_from_table_index_unchecked(
+		offset, c, not_sofiyot
+	);
 }
 
 #ifdef __cplusplus

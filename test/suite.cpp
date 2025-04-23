@@ -110,7 +110,20 @@ TEST(convert, phoenician_to_hebrew) {
 	}
 }
 
-TEST(convert, phoenician_to_foreign) {
+TEST(convert, phoenician_to_hebrew_foreign) {
+	for (size_t i = 0; i < FOREIGN_LEN; i++) {
+		const char32_t original = FOREIGN[i];
+		const char32_t expected = original;
+		const char32_t actual =
+			shemi_phoenician_to_hebrew(original, SHEMI_PHNX, SHEMI_ARMI);
+		if (actual != expected) ADD_FAILURE() << std::hex <<
+			"Conversion changed foreign character 0x" << original <<
+			" to 0x" << actual;
+		else SUCCEED() << std::hex << "0x" << original << " unchanged";
+	}
+}
+
+TEST(convert, phoenician_to_phoenician_foreign) {
 	for (size_t i = 0; i < FOREIGN_LEN; i++) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
