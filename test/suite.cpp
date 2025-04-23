@@ -115,7 +115,7 @@ TEST(convert, phoenician_to_hebrew_foreign) {
 		const char32_t original = FOREIGN[i];
 		const char32_t expected = original;
 		const char32_t actual =
-			shemi_phoenician_to_hebrew(original, SHEMI_PHNX, SHEMI_ARMI);
+			shemi_phoenician_to_hebrew(original, SHEMI_PHNX, (bool)(i % 2));
 		if (actual != expected) ADD_FAILURE() << std::hex <<
 			"Conversion changed foreign character 0x" << original <<
 			" to 0x" << actual;
