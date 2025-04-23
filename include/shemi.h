@@ -38,6 +38,8 @@ extern "C" {
 /** @defgroup scripts_phnx Phoenician Scripts
  * @ingroup scripts
  */
+/** @defgroup conv Conversion */
+/** @defgroup sofiyot Hebrew Sofiyot */
 
 /// @brief Phoenician script.
 /// @ingroup scripts scripts_phnx
@@ -89,7 +91,10 @@ _HFD size_t _SHEMI_HEBREW_NORMALIZE_TABLE_LEN =
 /// `[0x05D0-0x05EA]`.
 /// @see `shemi_hebrew_to_phoenician`.
 /// @return The equivalent Phoenician-equivalent for `c`.
-_HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) {
+/// @ingroup conv
+_HFN char32_t shemi_hebrew_to_phoenician_unchecked(
+	char32_t c, char32_t target
+) {
 	return target + _SHEMI_HEBREW_NORMALIZE_TABLE[c - 0x05D0];
 }
 
@@ -99,6 +104,7 @@ _HFN char32_t shemi_hebrew_to_phoenician_unchecked(char32_t c, char32_t target) 
 /// @see `shemi_hebrew_to_phoenician_unchecked`.
 /// @return The equivalent Phoenician-equivalent for `c`, or `c` if the given
 /// character is not Hebrew.
+/// @ingroup conv
 _HFN char32_t shemi_hebrew_to_phoenician(char32_t c, char32_t target) {
 	return shemi_block_hebrew_alphabet(c) ?
 		shemi_hebrew_to_phoenician_unchecked(c, target) : c;
@@ -116,6 +122,7 @@ const uint8_t _SHEMI_HEBREW_SOFIYOT_COUNT =
 /// @brief Checks if the given character is a Hebrew sofit (final) letter.
 /// @param c A character.
 /// @return Whether `c` is sofit.
+/// @ingroup sofiyot
 _HFN bool shemi_hebrew_is_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return true;
@@ -125,6 +132,7 @@ _HFN bool shemi_hebrew_is_sofit(char32_t c) {
 /// @brief Converts a Hebrew character to its sofit (final) variant.
 /// @param c A character.
 /// @return The sofit variant of `c`, or `c` if not applicable.
+/// @ingroup sofiyot
 _HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_NOT_SOFIYOT[i] == c) return c - 1;
@@ -134,6 +142,7 @@ _HFN char32_t shemi_hebrew_to_sofit(char32_t c) {
 /// @brief Converts a Hebrew character to its non-sofit (non-final) variant.
 /// @param c A character.
 /// @return The non-sofit variant of `c`, or `c` if not applicable.
+/// @ingroup sofiyot
 _HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 	for (uint8_t i = 0; i < _SHEMI_HEBREW_SOFIYOT_COUNT; i++)
 		if (_SHEMI_HEBREW_SOFIYOT[i] == c) return c + 1;
@@ -150,6 +159,7 @@ _HFN char32_t shemi_hebrew_to_not_sofit(char32_t c) {
 /// @see `shemi_phoenician_to_phoenician`,
 /// `shemi_phoenician_to_phoenician_string`
 /// @return The equivalent for `c` in the `to` script family.
+/// @ingroup conv
 _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 	char32_t c, char32_t from, char32_t to
 ) {
@@ -165,6 +175,7 @@ _HFN char32_t shemi_phoenician_to_phoenician_unchecked(
 /// `shemi_phoenician_to_phoenician_string`.
 /// @return The equivalent for `c` in the `to` script family, or `c` if `c` does
 /// not belong to `from`.
+/// @ingroup conv
 _HFN char32_t shemi_phoenician_to_phoenician(
 	char32_t c, char32_t from, char32_t to
 ) {
@@ -194,6 +205,7 @@ void _shemi_phoenician_to_phoenician_string_sse4_2(
 /// @param len The string length.
 /// @param from The Phoenician-family (@ref scripts_phnx) script `c` belongs to.
 /// @param to The Phoenician-family script (@ref scripts_phnx) to convert to.
+/// @ingroup conv
 _HFN_ void shemi_phoenician_to_phoenician_string(
 	char32_t *const ptr, size_t len, char32_t from, char32_t to
 ) {
@@ -239,6 +251,7 @@ _HFN char32_t _shemi_phoenician_to_hebrew_from_table_index_unchecked(
 /// character range.
 /// @see `shemi_phoenician_to_hebrew`.
 /// @return The equivalent Hebrew character for `c`, or `c` if not applicable.
+/// @ingroup conv
 _HFN char32_t shemi_phoenician_to_hebrew_unchecked(
 	char32_t c,
 	char32_t from,
@@ -256,6 +269,7 @@ _HFN char32_t shemi_phoenician_to_hebrew_unchecked(
 /// @param not_sofiyot Whether to use the sofit variant of the letter or not.
 /// @see `shemi_phoenician_to_hebrew_unchecked`.
 /// @return The equivalent Hebrew character for `c`, or `c` if not applicable.
+/// @ingroup conv
 _HFN char32_t shemi_phoenician_to_hebrew(
 	char32_t c,
 	char32_t from,
